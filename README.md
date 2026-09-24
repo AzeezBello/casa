@@ -36,7 +36,7 @@ Copy `.env.example` to `.env.local`. Every variable is optional for local develo
 
 | Variable | Purpose |
 |---|---|
-| `NEXT_PUBLIC_SITE_URL` | Public URL, used in page metadata and in links inside agent emails. Defaults to `http://localhost:3000`. |
+| `NEXT_PUBLIC_SITE_URL` | Public URL, used in page metadata and in links inside agent emails, e.g. `https://casa.ng`. If blank, the app uses Vercel's production URL on Vercel, otherwise `http://localhost:3000`. A malformed value stops the build with a clear error. |
 | `SUPABASE_URL` | Supabase project URL (Settings → API). |
 | `SUPABASE_ANON_KEY` | Used for all public reads, so row-level security always applies. |
 | `SUPABASE_SERVICE_ROLE_KEY` | Used on the server only, to store viewing requests and look up agent emails. Never expose it to the browser, and never prefix it with `NEXT_PUBLIC_`. |

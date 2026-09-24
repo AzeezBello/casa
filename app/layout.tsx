@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { resolveSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  metadataBase: resolveSiteUrl(),
   title: { default: "Casa — Find a place that feels like home", template: "%s · Casa" },
   description: "A Nigerian real estate discovery platform for homes, modular housing and virtual property tours."
 };

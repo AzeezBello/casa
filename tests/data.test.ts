@@ -2,6 +2,7 @@ import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { parseFilters } from "@/lib/filters";
 import { formatNaira } from "@/lib/format";
+import { resolveSiteUrl } from "@/lib/site-url";
 import { createMockRepository } from "@/lib/data/mock";
 import { MOCK_PROPERTIES } from "@/lib/data/mock-data";
 import { escapeLike, rowToProperty, type PropertyRow } from "@/lib/data/supabase";
@@ -78,5 +79,27 @@ describe("supabase mapping", () => {
   it("escapes LIKE and PostgREST wildcards in search input", () => {
     assert.equal(escapeLike("50%_off\\*"), "50\\%\\_off\\\\");
     assert.equal(escapeLike("lekki phase 1"), "lekki phase 1");
+  });
+});
+
+describe("resolveSiteUrl", () => {
+  it("treats blank values as unset (the Vercel build failure)", () => {
+    assert.equal(resolveSiteUrl({ NEXT_PUBLIC_SITE_URL: "" }).href, "http://localhost:3000/");
+    assert.equal(resolveSiteUrl({ NEXT_PUBLIC_SITE_URL: "   " }).href, "http://localhost:3000/");
+  });
+  it("prefers the explicit URL, then Vercel's production URL, then the deployment URL", () => {
+    const vercel = { VERCEL_PROJECT_PRODUCTION_URL: "casa.vercel.app", VERCEL_URL: "casa-abc123.vercel.app" };
+    assert.equal(resolveSiteUrl({ NEXT_PUBLIC_SITE_URL: "https://casa.ng", ...vercel }).href, "https://casa.ng/");
+    assert.equal(resolveSiteUrl({ NEXT_PUBLIC_SITE_URL: "", ...vercel }).href, "https://casa.vercel.app/");
+    assert.equal(resolveSiteUrl({ VERCEL_URL: "casa-abc123.vercel.app" }).href, "https://casa-abc123.vercel.app/");
+  });
+  it("adds https:// to bare domains and drops paths", () => {
+    assert.equal(resolveSiteUrl({ NEXT_PUBLIC_SITE_URL: "casa.ng" }).href, "https://casa.ng/");
+    assert.equal(resolveSiteUrl({ NEXT_PUBLIC_SITE_URL: "https://casa.ng/some/path/" }).href, "https://casa.ng/");
+    assert.equal(resolveSiteUrl({ NEXT_PUBLIC_SITE_URL: "http://localhost:3000" }).href, "http://localhost:3000/");
+  });
+  it("fails with a clear message on a malformed value", () => {
+    assert.throws(() => resolveSiteUrl({ NEXT_PUBLIC_SITE_URL: "not a url" }), /NEXT_PUBLIC_SITE_URL must be a URL/);
+    assert.throws(() => resolveSiteUrl({ NEXT_PUBLIC_SITE_URL: "casa" }), /NEXT_PUBLIC_SITE_URL must be a URL/);
   });
 });

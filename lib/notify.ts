@@ -1,6 +1,7 @@
 import "server-only";
 import { repository } from "./data";
 import { formatNaira } from "./format";
+import { resolveSiteUrl } from "./site-url";
 import type { Property } from "./types";
 import type { ViewingInput } from "./viewing";
 
@@ -24,13 +25,12 @@ export async function notifyAgentOfViewing(reference: string, property: Property
       await repository.setViewingRequestStatus(reference, "notify_failed");
       return;
     }
-    const site = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
     // Plain text only: every field below is user input.
     const text = [
       `New viewing request ${reference}`,
       ``,
       `Property: ${property.title} (${formatNaira(property.price)})`,
-      `${site}/properties/${property.slug}`,
+      new URL(`/properties/${property.slug}`, resolveSiteUrl()).href,
       ``,
       `Name: ${request.name}`,
       `Phone: ${request.phone}`,
