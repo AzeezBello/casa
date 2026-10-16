@@ -5,6 +5,13 @@ import type { Property, PropertyFilters } from "./types";
 
 export { CITIES, PROPERTY_TYPES, SORT_OPTIONS, parseFilters } from "./filters";
 
+export async function getPropertiesByLocation(
+  bounds: { sw: { lat: number; lng: number }; ne: { lat: number; lng: number } },
+  filters: PropertyFilters = {}
+): Promise<Property[]> {
+  return repository.listPropertiesByLocation(bounds, filters);
+}
+
 export async function getProperties(filters: PropertyFilters = {}): Promise<Property[]> {
   return repository.listProperties(filters);
 }

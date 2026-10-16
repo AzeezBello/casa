@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { PropertyCard } from "@/components/PropertyCard";
-import { CITIES, PROPERTY_TYPES, SORT_OPTIONS, getProperties, parseFilters } from "@/lib/listings";
+import { CITIES, PROPERTY_TYPES, SORT_OPTIONS, getProperties, getPropertiesByLocation, parseFilters } from "@/lib/listings";
+import { MapSearch, Bounds } from "@/components/MapSearch";
+import { useRouter } from "next/navigation";
 import { formatNaira } from "@/lib/format";
 
 export const metadata: Metadata = {
@@ -13,8 +15,16 @@ export const metadata: Metadata = {
 const PRICE_STEPS = [25_000_000, 50_000_000, 100_000_000, 150_000_000, 200_000_000, 300_000_000];
 
 export default async function PropertiesPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
-  const filters = parseFilters(await searchParams);
-  const results = await getProperties(filters);
+  const sp = await searchParams;
+  const filters = parseFilters(sp);
+  const bounds = sp.swLat && sp.swLng && sp.neLat && sp.neLng ? {
+    sw: { lat: Number(sp.swLat), lng: Number(sp.swLng) },
+    ne: { lat: Number(sp.neLat), lng: Number(sp.neLng) }
+  } : undefined;
+  const results = bounds
+    ? await getPropertiesByLocation(bounds, filters)
+    : await getProperties(filters);
+
   const hasFilters = Boolean(filters.q || filters.type || filters.city || filters.minPrice || filters.maxPrice || filters.minBeds || filters.tour);
 
   return (

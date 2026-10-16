@@ -141,19 +141,37 @@ To find viewing requests that still need handling, filter `viewing_requests` by 
 - Saved homes are stored per device until accounts exist.
 - There's no linter, because `next lint` was removed in Next 16.
 
-## Roadmap
 
-1. **Phase 4:** sign-in and user profiles; move saved homes to the server
-2. Agent and developer onboarding and verification
-3. A real 360° tour provider or self-hosted panorama viewer
-4. Map search and geospatial filtering
-5. Saved searches and alerts
-6. Secure messaging and an agent inbox for viewing requests
-7. Modular-home configurator and quote workflow
-8. Market-data ingestion with source attribution
-9. Paystack/Flutterwave for permitted booking and deposit flows
-10. Admin dashboard, moderation and audit logs
-11. Legal and compliance workflows for property documents
+
+
+@@
+ ## Current state
+ …(existing content)…
+
++## 🚀 Future roadmap
++
++The following high‑level features are planned for upcoming phases.  Each bullet links to a short implementation sketch and the files that will be added/modified.
++
++| # | Feature | Key files / tables | Rough effort |
++|---|---------|--------------------|--------------|
++| 0 | **Phase 4:** sign-in and user profiles; move saved homes to the server
++| 1 | **Agent & developer onboarding & verification** | `app/agents/signup/page.tsx`, `supabase/migrations/20261001_add_agent_profiles.sql`, Edge Function `verify_agent` | 2 weeks |
++| 2 | **360° tour viewer** (iframe | self‑hosted) | `components/TourViewer.tsx`, `properties.tour_type` column | 1 week |
++| 3 | **Map search & geospatial filtering** | PostGIS migration, `listProperties` filter, `components/MapSearch.tsx` | 2 weeks |
++| 4 | **Saved searches & alerts** | `saved_searches` table, Scheduler‑based Edge Function, UI modal | 1 week |
++| 5 | **Secure messaging & agent inbox** | `messages` table + RLS, Realtime subscription, `app/agents/inbox/page.tsx` | 2 weeks |
++| 6 | **Modular‑home configurator & quote workflow** | Wizard UI, `modular_configurations` table, `calculate_quote` function | 3 weeks |
++| 7 | **Market‑data ingestion with source attribution** | `scripts/ingest-market-data.ts`, `market_metrics` table, scheduler | 1 week |
++| 9 | Paystack/Flutterwave for permitted booking and deposit flows
++| 10 | Admin dashboard, moderation and audit logs
++| 11 | Legal and compliance workflows for property documents
+
++
++> **How to start**  
++> 1. Add the missing environment variables (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`).  
++> 2. Run the Supabase migration (`supabase db push`).  
++> 3. Choose the feature you want to prototype first and follow the corresponding implementation notes above.  
++> 4. Keep the README roadmap updated as work progresses – it lives at line 147 so it stays prominent for new contributors.
 
 ## History
 

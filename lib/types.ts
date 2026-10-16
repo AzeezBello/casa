@@ -16,6 +16,9 @@ export type Property = {
   size: number;
   images: string[];
   tour: boolean;
+  /** New fields for 360° tours */
+  tourType?: "none" | "iframe" | "self"; // type of tour
+  tourUrl?: string; // URL to iframe or self‑hosted assets
   verified: boolean;
   description: string;
   amenities: string[];
@@ -33,4 +36,42 @@ export type PropertyFilters = {
   minBeds?: number;
   tour?: boolean;
   sort?: SortKey;
+};
+
+// Saved searches
+export type SavedSearch = {
+  id: string;
+  userId: string;
+  name: string;
+  filters: PropertyFilters;
+  alertEnabled: boolean;
+  alertFrequency: "daily" | "weekly" | "monthly";
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type NewSavedSearch = {
+  name: string;
+  filters: PropertyFilters;
+  alertEnabled?: boolean;
+  alertFrequency?: "daily" | "weekly" | "monthly";
+};
+
+// Messaging
+export type Message = {
+  id: string;
+  propertyId: string;
+  agentId: string;
+  sender: "buyer" | "agent";
+  reference?: string; // buyer's viewing request reference
+  content: string;
+  sentAt: string;
+};
+
+export type NewMessage = {
+  propertyId: string;
+  agentId: string;
+  sender: "buyer" | "agent";
+  reference?: string;
+  content: string;
 };

@@ -1,22 +1,9 @@
-import type { Property, PropertyFilters } from "../types";
+import type { Property, PropertyFilters, SavedSearch, NewSavedSearch, Message, NewMessage, NewViewingRequest, ViewingRequestStatus, CreateViewingResult } from "../types";
 
-export type NewViewingRequest = {
-  reference: string;
-  propertyId: string;
-  name: string;
-  /** E.164, e.g. +2348031234567 */
-  phone: string;
-  email?: string;
-  /** YYYY-MM-DD */
-  preferredDate: string;
-  message?: string;
+export type GeoBounds = {
+  sw: { lat: number; lng: number };
+  ne: { lat: number; lng: number };
 };
-
-export type ViewingRequestStatus = "new" | "notified" | "notify_failed";
-
-export type CreateViewingResult =
-  | { ok: true }
-  | { ok: false; reason: "duplicate" | "reference_taken" };
 
 export interface Repository {
   /** False for the in-memory sample backend: nothing survives a restart. */
@@ -28,4 +15,13 @@ export interface Repository {
   createViewingRequest(input: NewViewingRequest): Promise<CreateViewingResult>;
   setViewingRequestStatus(reference: string, status: ViewingRequestStatus): Promise<void>;
   getAgentEmail(propertyId: string): Promise<string | undefined>;
+  // Saved‑searches
+  listSavedSearches(userId: string): Promise<SavedSearch[]>;
+  createSavedSearch(userId: string, data: NewSavedSearch): Promise<SavedSearch>;
+  deleteSavedSearch(id: string): Promise<void>;
+  // Messaging
+  listMessages(propertyId: string): Promise<Message[]>;
+  createMessage(msg: NewMessage): Promise<Message>;
+  /** New: fetch properties within geographic bounds */
+  listPropertiesByLocation(bounds: GeoBounds, filters?: PropertyFilters): Promise<Property[]>;
 }

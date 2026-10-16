@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Bath, BedDouble, CheckCircle2, MapPin, Play, Ruler, ShieldCheck } from "lucide-react";
 import { SaveButton } from "@/components/SaveButton";
-import { TourDialog } from "@/components/TourDialog";
+import { TourViewer } from "@/components/TourViewer";
 import { ViewingRequestForm } from "@/components/ViewingRequestForm";
 import { getAllSlugs, getProperties, getProperty } from "@/lib/listings";
 import { formatNaira } from "@/lib/format";
@@ -63,10 +63,13 @@ export default async function PropertyPage({ params }: Props) {
             {p.verified && <li className="verified"><ShieldCheck aria-hidden="true"/><strong>Verified</strong> listing</li>}
           </ul>
 
-          {p.tour && (
-            <TourDialog className="dark-btn" title={p.title} location={location} image={p.images[0]}>
-              <Play size={16} fill="currentColor" aria-hidden="true"/> Open 360° tour
-            </TourDialog>
+          {p.tour && p.tourType && p.tourUrl && (
+            <TourViewer
+              tourType={p.tourType}
+              tourUrl={p.tourUrl}
+              title={p.title}
+              location={location}
+            />
           )}
 
           <h2>About this home</h2>
