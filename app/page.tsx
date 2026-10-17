@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { Img } from "@/components/Img";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Play, ShieldCheck, Sparkles, Wallet } from "lucide-react";
 import { HeroSearch } from "@/components/HeroSearch";
@@ -28,7 +28,7 @@ export default async function HomePage() {
         </div>
         <div className="hero-visual">
           <div className="hero-image">
-            <Image src={HERO_IMAGE} alt="Modern two-storey home with a landscaped front garden" fill sizes="(max-width: 900px) 100vw, 50vw" preload/>
+            <Img src={HERO_IMAGE} alt="Modern two-storey home with a landscaped front garden" fill sizes="(max-width: 900px) 100vw, 50vw" preload/>
             <Link href="/properties?tour=1" className="floating-card tour-card">
               <span className="play" aria-hidden="true"><Play size={14} fill="currentColor"/></span>
               <span><strong>Take a virtual tour</strong><small>Explore before you visit</small></span>
@@ -58,7 +58,7 @@ export default async function HomePage() {
       </section>
 
       <section className="modular" id="modular">
-        <div className="modular-image"><Image src={MODULAR_IMAGE} alt="Bright modern interior with an open living space" fill sizes="(max-width: 900px) 100vw, 50vw"/></div>
+        <div className="modular-image"><Img src={MODULAR_IMAGE} alt="Bright modern interior with an open living space" fill sizes="(max-width: 900px) 100vw, 50vw"/></div>
         <div className="modular-copy">
           <div className="eyebrow">CASA MODULAR</div>
           <h2>Build the home you need, not the home you have to settle for.</h2>
@@ -77,7 +77,7 @@ export default async function HomePage() {
         <div className="tour-grid">
           {withTours.slice(0, 3).map(p => (
             <TourDialog key={p.id} className="tour-tile" title={p.title} location={`${p.area}, ${p.city}`} image={p.images[0]}>
-              <Image src={p.images[0]} alt="" fill sizes="(max-width: 900px) 100vw, 33vw"/>
+              <Img src={p.images[0]} alt={`Virtual walkthrough preview of ${p.title}`} fill sizes="(max-width: 900px) 100vw, 33vw"/>
               <span className="tour-overlay">
                 <span className="tour-play" aria-hidden="true"><Play size={18} fill="currentColor"/></span>
                 <span><strong>{p.title}</strong><small>{p.area}, {p.city}</small></span>

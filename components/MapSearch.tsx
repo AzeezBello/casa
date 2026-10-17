@@ -32,7 +32,7 @@ export function MapSearch() {
   // Hook into map clicks
   const ClickHandler = () => {
     useMapEvents({
-      click(e) {
+      click(e: any) {
         const { lat, lng } = e.latlng;
         if (!firstClick) {
           setFirstClick({ lat, lng });
@@ -50,19 +50,23 @@ export function MapSearch() {
     return null;
   };
 
+  const LeafletMapContainer = MapContainer as any;
+  const LeafletTileLayer = TileLayer as any;
+  const LeafletRectangle = Rectangle as any;
+
   return (
-    <MapContainer
+    <LeafletMapContainer
       center={[6.5244, 3.3792]} // Default centre – Lagos
       zoom={10}
-      style={{ height: '400px', width: '100%' }}
+      style={{ height: '400px', width: '100%', borderRadius: '16px', overflow: 'hidden' }}
     >
-      <TileLayer
+      <LeafletTileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
       />
       <ClickHandler />
       {rect && (
-        <Rectangle
+        <LeafletRectangle
           bounds={[
             [rect.sw.lat, rect.sw.lng],
             [rect.ne.lat, rect.ne.lng],
@@ -70,6 +74,6 @@ export function MapSearch() {
           pathOptions={{ color: 'blue' }}
         />
       )}
-    </MapContainer>
+    </LeafletMapContainer>
   );
 }

@@ -1,11 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Heart } from "lucide-react";
 import type { Property } from "@/lib/types";
 import { useSaved } from "@/lib/saved";
 import { PropertyCard } from "./PropertyCard";
+import { EmptyState } from "./EmptyState";
 
 type Load = { status: "loading" } | { status: "error" } | { status: "done"; properties: Property[] };
 
@@ -31,19 +30,47 @@ export function SavedList() {
     return () => controller.abort();
   }, [saved, needsFetch]);
 
-  if (load.status === "loading") return <p className="loading" role="status">Loading your saved homes…</p>;
-  if (load.status === "error") return <p className="field-error" role="alert">We couldn’t load your saved homes. Please refresh to try again.</p>;
+  if (load.status === "loading") {
+    return (
+      <div className="py-12 text-center" role="status">
+        <p className="loading">Loading your saved homes…</p>
+      </div>
+    );
+  }
+
+  if (load.status === "error") {
+    return (
+      <div className="py-12 text-center" role="alert">
+        <p className="field-error">We couldn’t load your saved homes. Please refresh to try again.</p>
+      </div>
+    );
+  }
 
   const homes = load.properties.filter(p => saved.includes(p.id));
   if (homes.length === 0) {
     return (
-      <div className="empty">
-        <Heart size={30} aria-hidden="true"/>
-        <h2>No saved homes yet</h2>
-        <p>Tap the heart on any listing to keep it here. Saved homes are stored on this device.</p>
-        <Link className="outline-btn" href="/properties">Browse homes</Link>
-      </div>
+      <EmptyState
+        icon="heart"
+        title="Your shortlist is empty"
+        description="Tap the heart icon on any listing card to keep track of homes you love."
+        tips={[
+          "Shortlisted homes are saved locally on your device across visits",
+          "Compare floor sizes, bedroom counts, and indicative prices at a glance",
+          "Check out 360° virtual tours before booking an in-person viewing"
+        ]}
+        ctaLabel="Explore homes"
+        ctaHref="/properties"
+        secondaryCtaLabel="Take 360° tours"
+        secondaryCtaHref="/properties?tour=1"
+      />
     );
   }
-  return <div className="property-grid">{homes.map(p => <PropertyCard key={p.id} property={p}/>)}</div>;
+
+  return (
+    <div className="property-grid">
+      {homes.map(p => (
+        <PropertyCard key={p.id} property={p} />
+      ))}
+    </div>
+  );
 }

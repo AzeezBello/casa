@@ -1,0 +1,11 @@
+"use client";
+
+import React, { type ReactNode } from "react";
+
+export function PageTransition({ children }: { children: ReactNode }) {
+  return (
+    <div className="page-transition">
+      {children}
+    </div>
+  );
+}

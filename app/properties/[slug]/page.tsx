@@ -9,6 +9,8 @@ import { getAllSlugs, getProperties, getProperty } from "@/lib/listings";
 import { formatNaira } from "@/lib/format";
 import { PropertyCard } from "@/components/PropertyCard";
 import { Img } from "@/components/Img";
+import { Badge } from "@/components/ui/badge";
+import { Tooltip } from "@/components/ui/tooltip";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -20,7 +22,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const p = await getProperty((await params).slug);
   if (!p) return { title: "Property not found" };
   const description = `${p.beds}-bedroom ${p.type.toLowerCase()} in ${p.area}, ${p.city} — ${formatNaira(p.price)}.`;
-  return { title: p.title, description, openGraph: { title: p.title, description, images: [p.images[0]] } };
+  return {
+    title: p.title,
+    description,
+    alternates: {
+      canonical: `/properties/${p.slug}`,
+    },
+    openGraph: {
+      title: `${p.title} · Casa`,
+      description,
+      images: [{ url: p.images[0], width: 1200, height: 800, alt: p.title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${p.title} · Casa`,
+      description,
+      images: [p.images[0]],
+    },
+  };
 }
 
 // Listings change in the database; rebuild these pages at most every 5 minutes.
@@ -32,20 +51,53 @@ export default async function PropertyPage({ params }: Props) {
   const location = `${p.area}, ${p.city}`;
   const similar = (await getProperties({ city: p.city })).filter(s => s.id !== p.id).slice(0, 3);
 
+  const propertyLd = {
+    "@context": "https://schema.org",
+    "@type": "SingleFamilyResidence",
+    name: p.title,
+    description: p.description,
+    image: p.images,
+    numberOfRooms: p.beds,
+    numberOfBathroomsTotal: p.baths,
+    floorSize: {
+      "@type": "QuantitativeValue",
+      value: p.size,
+      unitCode: "MTK",
+    },
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: p.area,
+      addressRegion: p.city,
+      addressCountry: "NG",
+    },
+    offers: {
+      "@type": "Offer",
+      price: p.price,
+      priceCurrency: "NGN",
+      availability: "https://schema.org/InStock",
+    },
+  };
+
   return (
     <div className="section detail">
-      <Link href="/properties" className="back-link"><ArrowLeft size={16} aria-hidden="true"/> All homes</Link>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(propertyLd) }}
+      />
+      <Link href="/properties" className="back-link">
+        <ArrowLeft size={16} aria-hidden="true"/> All homes
+      </Link>
 
       <div className="gallery">
         {p.images.slice(0, 3).map((src, i) => (
           <div key={src} className={i === 0 ? "gallery-main" : "gallery-side"}>
             <Img
-  src={src}
-  alt={i === 0 ? p.title : `Image ${i + 1} of ${p.title}`}
-  fill
-  sizes={i === 0 ? "(max-width: 900px) 100vw, 66vw" : "33vw"}
-  preload={i === 0}
-/>
+              src={src}
+              alt={i === 0 ? `Main exterior view of ${p.title}` : `Interior preview ${i + 1} of ${p.title}`}
+              fill
+              sizes={i === 0 ? "(max-width: 900px) 100vw, 66vw" : "33vw"}
+              preload={i === 0}
+            />
           </div>
         ))}
       </div>
@@ -66,7 +118,15 @@ export default async function PropertyPage({ params }: Props) {
             <li><BedDouble aria-hidden="true"/><strong>{p.beds}</strong> bedrooms</li>
             <li><Bath aria-hidden="true"/><strong>{p.baths}</strong> bathrooms</li>
             <li><Ruler aria-hidden="true"/><strong>{p.size}</strong> m²</li>
-            {p.verified && <li className="verified"><ShieldCheck aria-hidden="true"/><strong>Verified</strong> listing</li>}
+            {p.verified && (
+              <li className="verified">
+                <Tooltip content="Physical inspection and documentation confirmed by Casa">
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                    <ShieldCheck aria-hidden="true"/><strong>Verified</strong> listing
+                  </span>
+                </Tooltip>
+              </li>
+            )}
           </ul>
 
           {p.tour && p.tourType && p.tourUrl && (
@@ -83,7 +143,11 @@ export default async function PropertyPage({ params }: Props) {
 
           <h2>Features</h2>
           <ul className="amenities">
-            {p.amenities.map(a => <li key={a}><CheckCircle2 size={18} aria-hidden="true"/>{a}</li>)}
+            {p.amenities.map(a => (
+              <li key={a}>
+                <CheckCircle2 size={18} aria-hidden="true"/>{a}
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -97,7 +161,11 @@ export default async function PropertyPage({ params }: Props) {
       {similar.length > 0 && (
         <section className="similar" aria-labelledby="similar-heading">
           <h2 id="similar-heading">More homes in {p.city}</h2>
-          <div className="property-grid">{similar.map(s => <PropertyCard key={s.id} property={s}/>)}</div>
+          <div className="property-grid">
+            {similar.map(s => (
+              <PropertyCard key={s.id} property={s}/>
+            ))}
+          </div>
         </section>
       )}
     </div>

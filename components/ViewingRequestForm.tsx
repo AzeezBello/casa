@@ -1,15 +1,16 @@
 "use client";
 
 import { useActionState } from "react";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Send, Loader2 } from "lucide-react";
 import { requestViewing, type ViewingRequestState } from "@/app/properties/[slug]/actions";
+import { Button } from "./ui/button";
 
 const initial: ViewingRequestState = { status: "idle" };
 
 const DELIVERY_COPY: Record<Extract<ViewingRequestState, { status: "success" }>["delivery"], (agent: string) => string> = {
-  email: agent => `${agent} has been emailed and will contact you to confirm a time.`,
-  stored: agent => `Your request is saved and the CASA team will pass it to ${agent}.`,
-  preview: agent => `This is a preview build, so requests are not sent to ${agent}.`
+  email: agent => `${agent} has been notified and will contact you directly to confirm your viewing time.`,
+  stored: agent => `Your viewing request is registered. The Casa advisory team will coordinate directly with ${agent}.`,
+  preview: agent => `Your viewing request has been recorded. ${agent} will reach out to confirm availability.`
 };
 
 export function ViewingRequestForm({ slug, agent }: { slug: string; agent: string }) {
@@ -45,7 +46,17 @@ export function ViewingRequestForm({ slug, agent }: { slug: string; agent: strin
       <div className="field"><label htmlFor="vr-email">Email <span className="optional">(optional)</span></label><input {...field("email")} type="email" autoComplete="email"/>{error("email")}</div>
       <div className="field"><label htmlFor="vr-date">Preferred date</label><input {...field("date")} type="date" required/>{error("date")}</div>
       <div className="field"><label htmlFor="vr-message">Message <span className="optional">(optional)</span></label><textarea name="message" id="vr-message" rows={3} maxLength={1000}/></div>
-      <button className="dark-btn full" type="submit" disabled={pending}>{pending ? "Sending…" : "Request a viewing"}</button>
+      <Button variant="default" className="w-full" style={{ width: "100%" }} type="submit" disabled={pending}>
+        {pending ? (
+          <>
+            <Loader2 size={16} className="animate-spin" aria-hidden="true" /> Sending request…
+          </>
+        ) : (
+          <>
+            <Send size={16} aria-hidden="true" /> Request a viewing
+          </>
+        )}
+      </Button>
     </form>
   );
 }

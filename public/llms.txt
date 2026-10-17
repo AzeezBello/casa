@@ -1,0 +1,16 @@
+# Casa — Real Estate Discovery Platform
+
+> Casa is a modern Nigerian real estate discovery platform offering verified home listings, 360° interactive virtual tours, and modular housing solutions across Lagos, Abuja, and surrounding metropolitan areas.
+
+## Core Services & Features
+- **Curated Property Listings**: Verified duplexes, terraces, detached houses, apartments, and modular homes in Lagos (Ikoyi, Lekki, Victoria Island, Ikeja) and Abuja (Maitama, Guzape, Wuse).
+- **Interactive 360° Virtual Tours**: Panoramic walkthroughs allowing buyers and renters to inspect room dimensions and finishes before visiting in person.
+- **Casa Modular Living**: Sustainable, fast-construction prefabricated modular housing models tailored for Nigerian residential standards.
+- **Transparent Naira Pricing**: Clear asking prices in Nigerian Naira (₦) with verified ownership documentation and direct agent contact.
+
+## Key URLs
+- Home: /
+- Homes for Sale: /properties
+- Modular Housing: /properties?type=Modular
+- 360° Virtual Tours: /properties?tour=1
+- Shortlisted Homes: /saved

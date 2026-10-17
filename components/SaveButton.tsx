@@ -2,19 +2,39 @@
 
 import { Heart } from "lucide-react";
 import { useSaved } from "@/lib/saved";
+import { Tooltip } from "./ui/tooltip";
 
-export function SaveButton({ id, title, className = "heart" }: { id: string; title: string; className?: string }) {
+export function SaveButton({
+  id,
+  title,
+  className = "heart",
+}: {
+  id: string;
+  title: string;
+  className?: string;
+}) {
   const { isSaved, toggle } = useSaved();
   const saved = isSaved(id);
-  return (
+
+  const button = (
     <button
       type="button"
-      className={saved ? `${className} saved` : className}
+      className={`${saved ? `${className} saved heart-active` : className} transition-transform active:scale-90`}
       onClick={() => toggle(id)}
       aria-pressed={saved}
-      aria-label={saved ? `Remove ${title} from saved homes` : `Save ${title}`}
+      aria-label={saved ? `Remove ${title} from saved homes` : `Save ${title} to shortlist`}
     >
-      <Heart size={19} fill={saved ? "currentColor" : "none"} aria-hidden="true"/>
+      <Heart
+        size={19}
+        fill={saved ? "currentColor" : "none"}
+        aria-hidden="true"
+      />
     </button>
+  );
+
+  return (
+    <Tooltip content={saved ? "Remove from shortlist" : "Save to shortlist"}>
+      {button}
+    </Tooltip>
   );
 }

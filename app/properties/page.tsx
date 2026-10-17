@@ -5,10 +5,20 @@ import { PropertyCard } from "@/components/PropertyCard";
 import { CITIES, PROPERTY_TYPES, SORT_OPTIONS, getProperties, getPropertiesByLocation, parseFilters } from "@/lib/listings";
 import { MapSearch, Bounds } from "@/components/MapSearch";
 import { formatNaira } from "@/lib/format";
+import { EmptyState } from "@/components/EmptyState";
 
 export const metadata: Metadata = {
-  title: "Homes for sale",
-  description: "Search homes for sale across Lagos and Abuja by location, type, price and bedrooms."
+  title: "Homes for Sale in Nigeria",
+  description: "Browse verified houses, duplexes, terraces and modular living across Lagos and Abuja. Filter by budget, bedroom count, and 360° virtual tours.",
+  alternates: {
+    canonical: "/properties",
+  },
+  openGraph: {
+    title: "Homes for Sale in Nigeria · Casa",
+    description: "Browse verified houses, duplexes, terraces and modular living across Lagos and Abuja.",
+    url: "/properties",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Homes for Sale in Nigeria" }],
+  },
 };
 
 const PRICE_STEPS = [25_000_000, 50_000_000, 100_000_000, 150_000_000, 200_000_000, 300_000_000];
@@ -70,12 +80,18 @@ export default async function PropertiesPage({ searchParams }: { searchParams: P
           {results.map((p, i) => <PropertyCard key={p.id} property={p} preload={i < 3}/>)}
         </div>
       ) : (
-        <div className="empty">
-          <Search size={30} aria-hidden="true"/>
-          <h2>No matching homes</h2>
-          <p>Try another location, widen the price range or remove a filter.</p>
-          <Link className="outline-btn" href="/properties">Clear all filters</Link>
-        </div>
+        <EmptyState
+          icon="search"
+          title="No matching homes found"
+          description={filters.q ? `No properties matched “${filters.q}”.` : "No properties matched your current filter selection."}
+          tips={[
+            "Try broadening your price range or selecting 'Any city'",
+            "Clear specific bedroom or property type restrictions",
+            "Try searching by neighborhood (e.g. Lekki, Ikoyi, Maitama) or keyword"
+          ]}
+          ctaLabel="Clear all filters"
+          ctaHref="/properties"
+        />
       )}
     </div>
   );
