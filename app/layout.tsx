@@ -3,6 +3,8 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { resolveSiteUrl } from "@/lib/site-url";
 import "./globals.css";
+import { Meta } from "@/components/Meta";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   metadataBase: resolveSiteUrl(),
@@ -13,11 +15,20 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-NG">
+      <head>
+        <Meta
+          title="Casa – Real Estate Platform"
+          description="Search homes, modular houses and virtual tours across Nigeria."
+          canonical={process.env.NEXT_PUBLIC_SITE_URL}
+          ogImage="/og-image.png"
+        />
+      </head>
       <body>
         <a className="skip-link" href="#main">Skip to content</a>
-        <SiteHeader/>
+        <SiteHeader />
+        <Breadcrumbs />
         <main id="main">{children}</main>
-        <SiteFooter/>
+        <SiteFooter />
       </body>
     </html>
   );

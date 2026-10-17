@@ -75,3 +75,23 @@ export type NewMessage = {
   reference?: string;
   content: string;
 };
+
+// Viewing requests
+export type NewViewingRequest = {
+  reference: string;
+  propertyId: string;
+  name: string;
+  /** E.164, e.g. +2348031234567 */
+  phone: string;
+  email?: string;
+  /** YYYY-MM-DD */
+  preferredDate: string;
+  message?: string;
+};
+
+export type ViewingRequestStatus = "new" | "notified" | "notify_failed";
+
+export type CreateViewingResult =
+  | { ok: true }
+  | { ok: false; reason: "duplicate" | "reference_taken" };
+

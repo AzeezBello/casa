@@ -15,7 +15,7 @@ if (process.env.SUPABASE_URL) {
 
 const nextConfig: NextConfig = {
   // A stray package-lock.json in the home directory otherwise confuses root detection.
-  turbopack: { root: __dirname },
+  turbopack: { root: process.cwd() },
   images: { remotePatterns, qualities: [75] }
 };
 

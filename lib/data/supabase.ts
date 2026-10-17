@@ -1,5 +1,5 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import type { City, Property, PropertyFilters, PropertyType } from "../types";
+import type { City, Property, PropertyFilters, PropertyType, SavedSearch, NewSavedSearch, Message, NewMessage } from "../types";
 import type { Repository } from "./repository";
 
 // Reads use the anon key so row-level security (published listings only) always applies.
@@ -115,21 +115,11 @@ export function createSupabaseRepository(env: SupabaseEnv): Repository {
       if (error) fail('listProperties', error);
       return (data ?? []).map(rowToProperty);
     },
-      const q = filters.q?.trim().toLowerCase();
-      if (q) query = query.ilike("search_text", `%${escapeLike(q)}%`);
-      if (filters.type) query = query.eq("type", filters.type);
-      if (filters.city) query = query.eq("city", filters.city);
-      if (filters.minPrice !== undefined) query = query.gte("price", filters.minPrice);
-      if (filters.maxPrice !== undefined) query = query.lte("price", filters.maxPrice);
-      if (filters.minBeds !== undefined) query = query.gte("beds", filters.minBeds);
-      if (filters.tour) query = query.eq("has_tour", true);
-      query = filters.sort === "price-asc" || filters.sort === "price-desc"
-        ? query.order("price", { ascending: filters.sort === "price-asc" })
-        : query.order("created_at", { ascending: false });
-      const { data, error } = await query.limit(LIST_LIMIT).returns<PropertyRow[]>();
-      if (error) fail("listProperties", error);
-      return (data ?? []).map(rowToProperty);
-    },
+
+
+
+
+
 
     async getPropertyBySlug(slug) {
       const { data, error } = await reader.from("properties").select(PROPERTY_SELECT)
@@ -233,8 +223,10 @@ export function createSupabaseRepository(env: SupabaseEnv): Repository {
       if (error) fail('createMessage', error);
       return inserted as Message;
     },
+    async getAgentEmail(propertyId: string) {
       const { data, error } = await writer.from("properties")
-        .select("agent:agents(contact:agent_contacts(email))").eq("id", propertyId)
+        .select("agent:agents(contact:agent_contacts(email))")
+        .eq("id", propertyId)
         .maybeSingle<{ agent: { contact: { email: string } | null } | null }>();
       if (error) fail("getAgentEmail", error);
       return data?.agent?.contact?.email;

@@ -4,7 +4,6 @@ import { Search, SlidersHorizontal } from "lucide-react";
 import { PropertyCard } from "@/components/PropertyCard";
 import { CITIES, PROPERTY_TYPES, SORT_OPTIONS, getProperties, getPropertiesByLocation, parseFilters } from "@/lib/listings";
 import { MapSearch, Bounds } from "@/components/MapSearch";
-import { useRouter } from "next/navigation";
 import { formatNaira } from "@/lib/format";
 
 export const metadata: Metadata = {
@@ -36,7 +35,7 @@ export default async function PropertiesPage({ searchParams }: { searchParams: P
           <p aria-live="polite">{results.length} {results.length === 1 ? "home" : "homes"} found{filters.q ? ` for “${filters.q}”` : ""}</p>
         </div>
       </div>
-
+      <MapSearch />
       <form className="filter-bar" action="/properties" role="search" aria-label="Filter homes">
         <label className="filter wide"><span>Keyword</span>
           <span className="input-icon"><Search size={17} aria-hidden="true"/><input name="q" defaultValue={filters.q} placeholder="Area, city or type" maxLength={100}/></span>

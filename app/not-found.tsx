@@ -1,15 +1,20 @@
-import Link from "next/link";
-import { Home } from "lucide-react";
+"use client"
+
+import Link from "next/link"
+import { Search } from "lucide-react"
 
 export default function NotFound() {
   return (
-    <div className="section">
-      <div className="empty">
-        <Home size={30} aria-hidden="true"/>
-        <h1>We couldn’t find that page</h1>
-        <p>The listing may have been sold or removed.</p>
-        <Link className="outline-btn" href="/properties">Browse homes</Link>
-      </div>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100 p-8">
+      <h1 className="mb-4 text-6xl font-bold text-gray-800">404</h1>
+      <p className="mb-6 text-xl text-gray-600">Sorry, the page you’re looking for doesn’t exist.</p>
+      <Link
+        href="/"
+        className="inline-flex items-center rounded-md bg-primary-600 px-4 py-2 text-white hover:bg-primary-700"
+      >
+        <Search size={20} className="mr-2" aria-hidden="true" />
+        Go Home
+      </Link>
     </div>
-  );
+  )
 }

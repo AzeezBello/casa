@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { Img } from "@/components/Img";
 import Link from "next/link";
 import { BedDouble, Bath, MapPin, Play, ShieldCheck } from "lucide-react";
 import type { Property } from "@/lib/types";
@@ -9,7 +9,7 @@ export function PropertyCard({ property: p, preload = false }: { property: Prope
   return (
     <article className="property-card">
       <div className="property-image">
-        <Image src={p.images[0]} alt="" fill sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw" preload={preload}/>
+        <Img src={p.images[0]} alt={p.title} fill sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw" preload={preload}/>
         <span className="type-pill">{p.type}</span>
         <SaveButton id={p.id} title={p.title}/>
         {p.tour && <span className="tour-pill"><Play size={13} fill="currentColor" aria-hidden="true"/> 360° Tour</span>}

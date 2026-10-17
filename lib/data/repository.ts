@@ -1,5 +1,7 @@
 import type { Property, PropertyFilters, SavedSearch, NewSavedSearch, Message, NewMessage, NewViewingRequest, ViewingRequestStatus, CreateViewingResult } from "../types";
 
+export type { NewViewingRequest, ViewingRequestStatus, CreateViewingResult };
+
 export type GeoBounds = {
   sw: { lat: number; lng: number };
   ne: { lat: number; lng: number };

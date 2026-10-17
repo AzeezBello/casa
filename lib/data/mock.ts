@@ -50,6 +50,39 @@ export function createMockRepository(properties: Property[] = MOCK_PROPERTIES): 
     async getAgentEmail(propertyId) {
       const p = properties.find(x => x.id === propertyId);
       return p && sampleAgentEmail(p.agent.name);
+    },
+    async listSavedSearches(_userId) {
+      return [];
+    },
+    async createSavedSearch(userId, data) {
+      return {
+        id: `mock-search-${Date.now()}`,
+        userId,
+        name: data.name,
+        filters: data.filters,
+        alertEnabled: data.alertEnabled ?? false,
+        alertFrequency: data.alertFrequency ?? "daily",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+    },
+    async deleteSavedSearch(_id) {},
+    async listMessages(_propertyId) {
+      return [];
+    },
+    async createMessage(msg) {
+      return {
+        id: `mock-msg-${Date.now()}`,
+        propertyId: msg.propertyId,
+        agentId: msg.agentId,
+        sender: msg.sender,
+        reference: msg.reference,
+        content: msg.content,
+        sentAt: new Date().toISOString(),
+      };
+    },
+    async listPropertiesByLocation(_bounds, filters) {
+      return filterProperties(properties, filters ?? {});
     }
   };
 }

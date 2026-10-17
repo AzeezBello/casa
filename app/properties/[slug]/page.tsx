@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Bath, BedDouble, CheckCircle2, MapPin, Play, Ruler, ShieldCheck } from "lucide-react";
@@ -9,6 +8,7 @@ import { ViewingRequestForm } from "@/components/ViewingRequestForm";
 import { getAllSlugs, getProperties, getProperty } from "@/lib/listings";
 import { formatNaira } from "@/lib/format";
 import { PropertyCard } from "@/components/PropertyCard";
+import { Img } from "@/components/Img";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -39,7 +39,13 @@ export default async function PropertyPage({ params }: Props) {
       <div className="gallery">
         {p.images.slice(0, 3).map((src, i) => (
           <div key={src} className={i === 0 ? "gallery-main" : "gallery-side"}>
-            <Image src={src} alt={i === 0 ? p.title : ""} fill sizes={i === 0 ? "(max-width: 900px) 100vw, 66vw" : "33vw"} preload={i === 0}/>
+            <Img
+  src={src}
+  alt={i === 0 ? p.title : `Image ${i + 1} of ${p.title}`}
+  fill
+  sizes={i === 0 ? "(max-width: 900px) 100vw, 66vw" : "33vw"}
+  preload={i === 0}
+/>
           </div>
         ))}
       </div>
